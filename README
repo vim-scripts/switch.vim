@@ -1,0 +1,82 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4172
+
+Github project: https://github.com/AndrewRadev/switch.vim
+
+The main entry point of the plugin is a single command, ":Switch". When the command is executed, the plugin looks for one of a few specific patterns under the cursor and performs a substition depending on the pattern. For example, if the cursor is on the "true" in the following code:
+
+    flag = true
+
+Then, upon executing ":Switch", the "true" will turn into "false".
+
+It is highly recommended to map the ":Switch" command to a key. For example, to map it to "-", place the following in your .vimrc:
+
+    nnoremap - :Switch<cr>
+
+Here's a list of all the built-in switch definitions. To see the actual definitions with their patterns and replacements, look at the file plugin/switch.vim.
+
+Global:
+
+  Boolean conditions:
+      foo && bar
+      foo || bar
+
+  Boolean constants:
+      flag = true
+      flag = false
+
+Ruby:
+
+  Hash style:
+      foo = { :one => 'two' }
+      foo = { one: 'two' }
+
+  If-clauses:
+      if predicate?
+        puts 'Hello, World!'
+      end
+
+      if true and (predicate?)
+        puts 'Hello, World!'
+      end
+
+      if false or (predicate?)
+        puts 'Hello, World!'
+      end
+
+  Rspec should/should_not:
+      1.should eq 1
+      1.should_not eq 1
+
+PHP:
+
+  "Echo" in tags:
+      <?php "Text" ?>
+      <?php echo "Text" ?>
+
+Eruby:
+
+  If-clauses:
+      <% if predicate? %>
+        <%= 'Hello, World!' %>
+      <% end %>
+
+      <% if true and (predicate?) %>
+        <%= 'Hello, World!' %>
+      <% end %>
+
+      <% if false or (predicate?) %>
+        <%= 'Hello, World!' %>
+      <% end %>
+
+  Tag type:
+      <% something %>
+      <%# something %>
+      <%=raw something %>
+      <%= something %>
+
+  Hash style:
+      <% foo = { :one => 'two' } %>
+      <% foo = { one: 'two' } %>
+
+For more detailed information, please read the docs or check out the README on github.
+
