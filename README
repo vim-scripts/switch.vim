@@ -1,6 +1,7 @@
 This is a mirror of http://www.vim.org/scripts/script.php?script_id=4172
 
 Github project: https://github.com/AndrewRadev/switch.vim
+Screencast: http://youtu.be/zIOOLZJb87U
 
 The main entry point of the plugin is a single command, ":Switch". When the command is executed, the plugin looks for one of a few specific patterns under the cursor and performs a substition depending on the pattern. For example, if the cursor is on the "true" in the following code:
 
@@ -24,6 +25,9 @@ Global:
       flag = true
       flag = false
 
+      flag = True
+      flag = False
+
 Ruby:
 
   Hash style:
@@ -46,6 +50,15 @@ Ruby:
   Rspec should/should_not:
       1.should eq 1
       1.should_not eq 1
+
+  Tap:
+    foo = user.comments.map(&:author).first
+    foo = user.comments.tap { |o| puts o.inspect }.map(&:author).first
+
+  String style (Note that it only works for single-word strings):
+    foo = 'bar'
+    foo = "baz"
+    foo = :baz
 
 PHP:
 
@@ -77,6 +90,18 @@ Eruby:
   Hash style:
       <% foo = { :one => 'two' } %>
       <% foo = { one: 'two' } %>
+
+C++:
+
+  Pointer dots/arrows:
+    Object* foo = bar.baz;
+    Object* foo = bar->baz;
+
+Coffeescript:
+
+  Arrows:
+    functionCall (foo) ->
+    functionCall (foo) =>
 
 For more detailed information, please read the docs or check out the README on github.
 
