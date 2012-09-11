@@ -2,13 +2,14 @@ if exists("g:loaded_switch") || &cp
   finish
 endif
 
-let g:loaded_switch = '0.0.2' " version number
+let g:loaded_switch = '0.1.1' " version number
 let s:keepcpo = &cpo
 set cpo&vim
 
 let g:switch_builtins =
       \ {
       \   'ampersands': ['&&', '||'],
+      \   'capital_true_false': ['True', 'False'],
       \   'true_false': ['true', 'false'],
       \   'ruby_hash_style': {
       \     ':\(\k\+\)\s\+=>': '\1:',
@@ -60,6 +61,7 @@ else
   let g:switch_definitions =
         \ [
         \   g:switch_builtins.ampersands,
+        \   g:switch_builtins.capital_true_false,
         \   g:switch_builtins.true_false,
         \ ]
 

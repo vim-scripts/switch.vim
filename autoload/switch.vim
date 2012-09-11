@@ -2,6 +2,8 @@ let s:type_list = type([])
 let s:type_dict = type({})
 
 function! switch#Switch(definitions)
+  silent! normal! zO
+
   try
     let saved_cursor     = getpos('.')
     let min_match_length = -1
@@ -24,7 +26,7 @@ function! switch#Switch(definitions)
 
     if min_match_length > 0
       let [pattern, replacement, start, end] = min_match
-      let pattern = s:LimitPatternToColumns(pattern, start, end)
+      let pattern = s:LimitPattern(pattern, start)
       call s:Replace(pattern, replacement)
       return 1
     else
@@ -71,9 +73,11 @@ function! s:Match(pattern)
       return [-1, -1, -1]
     endif
 
+    " Note the strwidth() check for multibyte chars
     let match_start = col('.')
     call search(a:pattern, 'cWe', line('.'))
-    let match_end = col('.')
+    let current_char = getline('.')[col('.') - 1]
+    let match_end = col('.') - 1 + strwidth(current_char)
 
     if match_start > col || match_end < col
       return [-1, -1, -1]
@@ -93,17 +97,11 @@ function! s:Replace(pattern, replacement)
   return 1
 endfunction
 
-function! s:LimitPatternToColumns(pattern, start, end)
-  if a:start == 1
-    let pattern = '^'.a:pattern
-  else
-    let pattern = '\%>'.(a:start - 1).'c'.a:pattern
-  endif
+function! s:LimitPattern(pattern, col)
+  let pattern = a:pattern
 
-  if a:end >= col('$') - 1
-    let pattern = a:pattern.'$'
-  else
-    let pattern = pattern.'\%<'.(a:end + 2).'c'
+  if a:col > 1
+    let pattern = '\%>'.(a:col - 1).'c'.pattern
   endif
 
   return pattern
