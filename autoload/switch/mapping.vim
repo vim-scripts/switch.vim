@@ -62,12 +62,14 @@ function! switch#mapping#Match() dict
       call search(pattern, 'cWe', lnum)
       let match_end = col('.')
 
-      " set the end of the pattern to the next character, or EOL. Extra logic
-      " is for multibyte characters. The 'whichwrap' option is reset to the
-      " default in order to avoid "l" wrapping around.
+      " set the end of the pattern to the next character, or EOL.
+      "
+      " whichwrap logic is for multibyte characters. The 'whichwrap' option is
+      " reset to the default in order to avoid "l" wrapping around.
       let original_whichwrap = &whichwrap
       set whichwrap&vim
-      normal! l
+      silent! normal! l
+
       if col('.') == match_end
         " no movement, we must be at the end
         let match_end = col('$')
@@ -163,7 +165,7 @@ function! s:LimitPattern(pattern, start, end)
   endif
 
   if a:end > 1 && a:end < col('$')
-    let pattern = pattern.'\%<'.(a:end + 1).'c'
+    let pattern = pattern.'\m\%<'.(a:end + 1).'c'
   endif
 
   return pattern

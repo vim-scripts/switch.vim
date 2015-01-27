@@ -13,7 +13,7 @@ It is highly recommended to map the ":Switch" command to a key. For example, to 
 
     nnoremap - :Switch<cr>
 
-Here's a list of all the built-in switch definitions. To see the actual definitions with their patterns and replacements, look at the file plugin/switch.vim.
+Here's a list of some of the built-in switch definitions. To see all definitions, read the documentation. To see the actual definitions with their patterns and replacements, look at the file plugin/switch.vim.
 
 Global:
 

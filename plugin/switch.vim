@@ -2,9 +2,13 @@ if exists("g:loaded_switch") || &cp
   finish
 endif
 
-let g:loaded_switch = '0.2.0' " version number
+let g:loaded_switch = '0.3.0' " version number
 let s:keepcpo = &cpo
 set cpo&vim
+
+if !exists('g:switch_mapping')
+  let g:switch_mapping = 'gs'
+endif
 
 let g:switch_builtins =
       \ {
@@ -52,6 +56,10 @@ let g:switch_builtins =
       \     },
       \   },
       \   'rspec_should': ['should ', 'should_not '],
+      \   'rspec_expect': {
+      \     '\(expect(.*)\.to\) ':     '\1_not ',
+      \     '\(expect(.*)\.to\)_not ': '\1 ',
+      \   },
       \   'rspec_be_true_false': ['be_true', 'be_false'],
       \   'eruby_if_clause': {
       \     '<% if true or (\(.*\)) %>':          '<% if false and (\1) %>',
@@ -59,10 +67,14 @@ let g:switch_builtins =
       \     '<% if \%(true\|false\)\@!\(.*\) %>': '<% if true or (\1) %>',
       \   },
       \   'eruby_tag_type': {
-      \     '<%= \(.*\) %>':    '<% \1 %>',
-      \     '<% \(.*\) -\?%>':  '<%# \1 %>',
-      \     '<%# \(.*\) %>':    '<%=raw \1 %>',
-      \     '<%=raw \(.*\) %>': '<%= \1 %>',
+      \     '<%= \(.*\) %>':   '<% \1 %>',
+      \     '<% \(.*\) -\?%>': '<%# \1 %>',
+      \     '<%# \(.*\) %>':   '<%= \1 %>',
+      \   },
+      \   'haml_tag_type': {
+      \     '= \(.*\)':  '- \1',
+      \     '- \(.*\)':  '-# \1',
+      \     '-# \(.*\)': '= \1',
       \   },
       \   'php_echo': {
       \     '<?php echo \(.\{-}\) ?>':        '<?php \1 ?>',
@@ -75,6 +87,10 @@ let g:switch_builtins =
       \   'coffee_arrow': {
       \     '^\(.*\)->': '\1=>',
       \     '^\(.*\)=>': '\1->',
+      \   },
+      \   'coffee_dictionary_shorthand': {
+      \     '\([{,]\s*\)\@<=\(\k\+\)\(\s*[},]\)':       '\2: \2\3',
+      \     '\([{,]\s*\)\@<=\(\k\+\): \?\2\(\s*[},]\)': '\2\3',
       \   },
       \   'clojure_string': {
       \     '"\(\k\+\)"': '''\1',
@@ -111,6 +127,13 @@ autocmd FileType eruby let b:switch_definitions =
       \   g:switch_builtins.ruby_string,
       \ ]
 
+autocmd FileType haml let b:switch_definitions =
+      \ [
+      \   g:switch_builtins.ruby_if_clause,
+      \   g:switch_builtins.ruby_hash_style,
+      \   g:switch_builtins.haml_tag_type,
+      \ ]
+
 autocmd FileType php let b:switch_definitions =
       \ [
       \   g:switch_builtins.php_echo,
@@ -121,6 +144,7 @@ autocmd FileType ruby let b:switch_definitions =
       \   g:switch_builtins.ruby_hash_style,
       \   g:switch_builtins.ruby_if_clause,
       \   g:switch_builtins.rspec_should,
+      \   g:switch_builtins.rspec_expect,
       \   g:switch_builtins.rspec_be_true_false,
       \   g:switch_builtins.ruby_tap,
       \   g:switch_builtins.ruby_string,
@@ -136,6 +160,7 @@ autocmd FileType cpp let b:switch_definitions =
 autocmd FileType coffee let b:switch_definitions =
       \ [
       \   g:switch_builtins.coffee_arrow,
+      \   g:switch_builtins.coffee_dictionary_shorthand,
       \ ]
 
 autocmd FileType clojure let b:switch_definitions =
@@ -171,6 +196,10 @@ function! s:Switch()
   call switch#Switch(definitions)
   silent! call repeat#set(":Switch\<cr>")
 endfunction
+
+if g:switch_mapping != ''
+  exe 'nnoremap '.g:switch_mapping.' :Switch<cr>'
+endif
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

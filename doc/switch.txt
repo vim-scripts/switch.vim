@@ -43,10 +43,17 @@ the cursor is on the "true" in the following code:
 <
 Then, upon executing |:Switch|, the "true" will turn into "false".
 
-It is highly recommended to map the |:Switch| command to a key. For example,
-to map it to "-", place the following in your .vimrc:
+There's a default mapping to trigger the command, `gs`. Note that this is
+already a Vim built-in (|gs|), but it doesn't seem particularly useful.
+
+If you'd like to change the mapping, change the value of |g:switch_mapping|.
+For example, to map it to "-", place the following in your .vimrc:
 >
-    nnoremap - :Switch<cr>
+    let g:switch_mapping = "-"
+<
+To avoid the default mapping completely, set the variable to an empty string:
+>
+    let g:switch_mapping = ""
 <
 See |switch-customization| below for information on how to create several
 mappings with different definitions.
@@ -203,8 +210,8 @@ You could also use a separate mapping for that.
 
 Separate mappings ~
 
-While it was recommended to define a mapping for |:Switch|, you could actually
-define several mappings with your own custom definitions:
+While there's a default mapping for |:Switch|, you could actually define
+several mappings with your own custom definitions:
 >
     let g:variable_style_switch_definitions = [
         \   {
@@ -354,7 +361,6 @@ Tag type (g:switch_builtins.eruby_tag_type):
 >
     <% something %>
     <%# something %>
-    <%=raw something %>
     <%= something %>
 <
 
@@ -362,6 +368,33 @@ Hash style (g:switch_builtins.ruby_hash_style):
 >
     <% foo = { :one => 'two' } %>
     <% foo = { one: 'two' } %>
+<
+
+Haml ~
+
+If-clauses (g:switch_builtins.ruby_if_clause):
+>
+    - if predicate?
+      Hello, World!
+
+    - if true or (predicate?)
+      Hello, World!
+
+    - if false and (predicate?)
+      Hello, World!
+<
+
+Tag type (g:switch_builtins.haml_tag_type):
+>
+    - something
+    -# something
+    = something
+<
+
+Hash style (g:switch_builtins.ruby_hash_style):
+>
+    %a{:href => '/example'}
+    %a{href: '/example'}
 <
 
 C++ ~
@@ -378,6 +411,11 @@ Arrows (g:switch_builtins.coffee_arrow):
 >
     functionCall (foo) ->
     functionCall (foo) =>
+<
+Dictionary shorthand (g:switch_builtins.coffee_dictionary_shorthand):
+>
+    foo = {one, two}
+    foo = {one: one, two}
 <
 
 Clojure ~
@@ -420,6 +458,18 @@ String style (g:switch_builtins.scala_string):
 
 ==============================================================================
 SETTINGS                                                       *switch-settings*
+
+                                                              *g:switch_mapping*
+>
+    let g:switch_mapping = '-'
+<
+
+Default value: "gs"
+
+This variable is the default mapping the plugin will use. Set it to "" to
+avoid setting a default mapping. You can then use the |:Switch| command, or
+create a mapping manually.
+
 
                                                           *g:switch_definitions*
 >
